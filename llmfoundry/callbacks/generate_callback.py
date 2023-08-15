@@ -85,8 +85,8 @@ class Generate(Callback):
                 _ = model.model(input_ids=dummy_input)
             
             output_token_ids = model.model.generate(  # type: ignore
-                input_ids=tokenized_input[0]['input_ids'],
-                attention_mask=tokenized_input[0]['attention_mask'],
+                input_ids=tokenized_input['input_ids'],
+                attention_mask=tokenized_input['attention_mask'],
                 synced_gpus=True,
                 **self.generate_kwargs,
             )
