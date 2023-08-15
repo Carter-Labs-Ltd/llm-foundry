@@ -37,7 +37,8 @@ class GPTEvaluation(Generate):
             test_data = json.load(f)
         
         prompts = [x['prompt'] for x in test_data]
-
+        responses = [x['response'] for x in test_data]
+        self.responses = responses
         with open(template_file, "r") as f:
             template = f.read()
         self.template = template
@@ -243,7 +244,7 @@ class GPTEvaluation(Generate):
                         logger.exception("Failed to evaluate prompt response")
                         result = "Failed to evaluate prompt response"
 
-                    rows.append([prompt, output_text, result, score])
+                    rows.append([prompt, self.responses[i], output_text, result, score])
 
 
 
