@@ -340,6 +340,7 @@ def main(cfg: DictConfig):
 
 
 if __name__ == '__main__':
+    print('main entered')
     yaml_path, args_list = sys.argv[1], sys.argv[2:]
     with open(yaml_path) as f:
         yaml_cfg = om.load(f)
