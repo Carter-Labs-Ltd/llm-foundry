@@ -48,7 +48,7 @@ def build_callback(name: str, kwargs: Dict[str, Any]):
     elif name == 'generate_callback':
         prompts = kwargs.pop('prompts')
         return Generate(prompts=list(prompts), **kwargs)
-    elif name == 'gpt-eval-callback':
+    elif name == 'gpt_eval_callback':
         return GPTEvaluation(**kwargs)   
     elif name == 'global_lr_scaling':
         return GlobalLRScaling(**kwargs)
