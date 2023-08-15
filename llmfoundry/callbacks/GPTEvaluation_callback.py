@@ -25,7 +25,7 @@ import time
 import re
 
 class GPTEvaluation(Generate):
-    def __init__(self, test_file: str, batch_log_interval: int,
+    def __init__(self, test_file: str, template_file:str, batch_log_interval: int,
                  **kwargs: Any):
         '''
         Subclass of generate clalback which loads prompts from file and sends responses to GPT for evaluation
@@ -37,6 +37,10 @@ class GPTEvaluation(Generate):
             test_data = json.load(f)
         
         prompts = [x['prompt'] for x in test_data]
+
+        with open(template_file, "r") as f:
+            template = f.read()
+        self.template = template
 
         super().__init__(prompts, batch_log_interval, **kwargs)
     
@@ -60,8 +64,6 @@ class GPTEvaluation(Generate):
             max_tokens=payload['max_tokens'],
             temperature=payload['temperature'],
         )
-
-        
 
         content = completion.choices[0].message["content"]
         assert isinstance(content, str)
@@ -146,9 +148,8 @@ class GPTEvaluation(Generate):
         return None
 
     def evaluate_prompt_response(self, prompt:str, response:str):
-        with open("./prompt_response.txt", "r") as f:
-            template = f.read()
-        template = template.replace("{prompt}", prompt)
+        
+        template = self.template.replace("{prompt}", prompt)
         template = template.replace("{response}", response)
 
         payload = {

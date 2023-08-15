@@ -24,7 +24,7 @@ from transformers import AutoTokenizer, PreTrainedTokenizerBase
 
 from llmfoundry.callbacks import (FDiffMetrics, Generate, GlobalLRScaling,
                                   LayerFreezing, MonolithicCheckpointSaver,
-                                  ScheduledGarbageCollector)
+                                  ScheduledGarbageCollector, GPTEvaluation)
 from llmfoundry.optim import (DecoupledAdaLRLion, DecoupledClipLion,
                               DecoupledLionW)
 
@@ -48,6 +48,8 @@ def build_callback(name: str, kwargs: Dict[str, Any]):
     elif name == 'generate_callback':
         prompts = kwargs.pop('prompts')
         return Generate(prompts=list(prompts), **kwargs)
+    elif name == 'gpt-eval-callback':
+        return GPTEvaluation(**kwargs)   
     elif name == 'global_lr_scaling':
         return GlobalLRScaling(**kwargs)
     elif name == 'layer_freezing':
