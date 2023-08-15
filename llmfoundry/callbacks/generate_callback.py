@@ -69,10 +69,10 @@ class Generate(Callback):
         if tokenizer.pad_token_id is None:
             tokenizer.pad_token_id = tokenizer.eos_token_id
         print('prompts', self.prompts)
-        tokenized_input = tokenizer(self.prompts,
+        tokenized_input = tokenizer(self.prompts[0],
                                     return_tensors='pt',
-                                    padding=True)
-
+                                    padding=False)
+        print(tokenized_input)
         for k, v in tokenized_input.items():
             tokenized_input[k] = device.tensor_to_device(v)
 
@@ -87,6 +87,7 @@ class Generate(Callback):
             output_token_ids = model.model.generate(  # type: ignore
                 input_ids=tokenized_input['input_ids'],
                 attention_mask=tokenized_input['attention_mask'],
+                sequence_id=tokenized_input['sequence_id'],
                 synced_gpus=True,
                 **self.generate_kwargs,
             )
