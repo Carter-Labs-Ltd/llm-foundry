@@ -68,6 +68,7 @@ class Generate(Callback):
         tokenizer.padding_side = 'left'
         if tokenizer.pad_token_id is None:
             tokenizer.pad_token_id = tokenizer.eos_token_id
+        print('prompts', self.prompts)
         tokenized_input = tokenizer(self.prompts,
                                     return_tensors='pt',
                                     padding=True)
@@ -89,7 +90,7 @@ class Generate(Callback):
                 synced_gpus=True,
                 **self.generate_kwargs,
             )
-
+        print('generatioon done---------------------')
         if dist.get_global_rank() == 0:
             if self.wandb_logger is not None:
                 assert wandb.run is not None, 'wandb should have started run'
@@ -114,6 +115,7 @@ class Generate(Callback):
                 wandb.log_artifact(artifact)
                 wandb.log({'generations': text_table},
                           step=state.timestamp.batch.value)
-
+        print('logging done--------------------')
         tokenizer.padding_side = original_padding_side
         model.train(mode=original_mode)
+        print('Gen finished---------')
