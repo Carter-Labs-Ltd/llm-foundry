@@ -27,6 +27,7 @@ from llmfoundry.utils.config_utils import (log_config, process_init_device,
 
 def validate_config(cfg: DictConfig):
     """Validates compatible model and dataloader selection."""
+    
     loaders = [cfg.train_loader]
     if 'eval_loader' in cfg:
         loaders.append(cfg.eval_loader)
@@ -171,6 +172,7 @@ def build_dataloader(cfg: DictConfig, tokenizer: PreTrainedTokenizerBase,
 
 def main(cfg: DictConfig):
     # Check for incompatibilities between the model and data loaders
+    print('train entered')
     validate_config(cfg)
 
     # Filter deprecation warning from torch internal usage
@@ -257,12 +259,13 @@ def main(cfg: DictConfig):
         build_logger(name, logger_cfg)
         for name, logger_cfg in (cfg.get('loggers') or {}).items()
     ]
-
+    print('Building callbacks')
     # Callbacks
     callbacks = [
         build_callback(name, callback_cfg)
         for name, callback_cfg in (cfg.get('callbacks') or {}).items()
     ]
+    print('Callbacks built')
 
     # Algorithms
     algorithms = [
